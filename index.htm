@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pok&eacute;dash</title>
+<head>
+<script type="text/javascript" src="js/jquery.js"></script>
+<style>
+.float1 {
+	position: absolute; 
+	left: 0px; 
+	top: 75px; 
+	border: solid 0px #555; 
+	width:440px;
+	height:805px
+}
+.crop2 {
+	position: absolute; 
+	left: 432px; 
+	top: 75px; 
+	border: solid 0px #555; 
+	width:1246px; 
+	height:805px;
+}
+body, td {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+}
+h1 {
+	font-size:20px;
+}
+.column {
+	display:table-cell;
+	margin:0px;
+	padding:0px 40px 0px 0px;
+}
+select {
+	min-width:100px;
+}
+.output {
+	background-color:#000000;
+	text-align:center;
+}
+.tbl_heading {
+	font-weight:bold;
+	background-color:#6e6aa7;
+	color:#ffffff;
+}
+.dmg_immune {
+	background-color:#aaaaaa;
+	width:75px;
+}
+.dmg_resist2 {
+	background-color:#b9b9ed;
+	width:75px;
+}
+.dmg_resist {
+	background-color:#b9edba;
+	width:75px;
+}
+.dmg_normal {
+	background-color:#ffffff;
+	width:75px;
+}
+.dmg_weak {
+	background-color:#eddab9;
+	width:75px;
+}
+.dmg_weak2 {
+	background-color:#edbab9;
+	width:75px;
+}
+</style>
+</head>
+<body style="background-color:white;">
+<script type="text/javascript">
+
+var types = new Array(
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5, 0, 1, 1, 0.5, 1, 1],// Normal
+[1, 0.5, 0.5, 1, 2, 2, 1, 1, 1, 1, 1, 2, 0.5, 1, 0.5, 1, 2, 1, 1],// Fire
+[1, 2, 0.5, 1, 0.5, 1, 1, 1, 2, 1, 1, 1, 2, 1, 0.5, 1, 1, 1, 1],// Water
+[1, 1, 2, 0.5, 0.5, 1, 1, 1, 0, 2, 1, 1, 1, 1, 0.5, 1, 1, 1, 1],// Electric
+[1, 0.5, 2, 1, 0.5, 1, 1, 0.5, 2, 0.5, 1, 0.5, 2, 1, 0.5, 1, 0.5, 1, 1],// Grass
+[1, 0.5, 0.5, 1, 2, 0.5, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1, 0.5, 1, 1],// Ice
+[2, 1, 1, 1, 1, 2, 1, 0.5, 1, 0.5, 0.5, 0.5, 2, 0, 1, 2, 2, 0.5, 1],// Fighting
+[1, 1, 1, 1, 2, 1, 1, 0.5, 0.5, 1, 1, 1, 0.5, 0.5, 1, 1, 0, 2, 1],// Poison
+[1, 2, 1, 2, 0.5, 1, 1, 2, 1, 0, 1, 0.5, 2, 1, 1, 1, 2, 1, 1],// Ground
+[1, 1, 1, 0.5, 2, 1, 2, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 0.5, 1, 1],// Flying
+[1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 0.5, 1, 1, 1, 1, 0, 0.5, 1, 1],// Psychic
+[1, 0.5, 1, 1, 2, 1, 0.5, 0.5, 1, 0.5, 2, 1, 1, 0.5, 1, 2, 0.5, 0.5, 1],// Bug
+[1, 2, 1, 1, 1, 2, 0.5, 1, 0.5, 2, 1, 2, 1, 1, 1, 1, 0.5, 1, 1],// Rock
+[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0.5, 1, 1, 1],// Ghost
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0.5, 0, 1],// Dragon
+[1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 2, 1, 1, 2, 1, 0.5, 1, 0.5, 1],// Dark
+[1, 0.5, 0.5, 0.5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0.5, 2, 1],// Steel
+[1, 0.5, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 1, 2, 2, 0.5, 1, 1],// Fairy
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);// None
+
+var type_name = new Array("Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting", "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy");
+
+var abilities = new Array(
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// None
+[1, 0.5, 1, 1, 1, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Thick Fat
+[1, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Heatproof
+[1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Levitate
+[1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Volt Absorb
+[1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Water Absorb
+[1, 1.25, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Dry Skin
+[1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Flash Fire
+[1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Sap Sipper
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Filter
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);// Wonder Guard
+
+var weathers = new Array(
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// None
+[1, 1.5, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],// Drought
+[1, 0.5, 1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);// Drizzle
+
+$(document).ready(function(){
+
+	$("#submit").click(function()
+	{
+		$("div#content").hide();
+		var type1 = $("#def_type1").val();
+		var type2 = $("#def_type2").val();
+		var ability = $("#def_ability").val();
+		var weather = $("#def_weather").val();
+		var color = new Array();
+		var result = new Array();
+		var output;
+		var i;
+		
+		if(type1 != type2)
+		{
+			for (i=0; i<=18; i++)
+			{
+				result[i] = ((types[i][type1] * types[i][type2]) * abilities[ability][i]) * weathers[weather][i];
+				if((types[i][type1] * types[i][type2]) < 2 && ability == 10){result[i] = 0};
+				if((types[i][type1] * types[i][type2]) >= 2 && ability == 9){result[i] = result[i] * 0.75};
+				if(result[i] == 1){color[i] = "dmg_normal"};
+				if(result[i] < 1){color[i] = "dmg_resist"};
+				if(result[i] < 0.5){color[i] = "dmg_resist2"};
+				if(result[i] == 0){color[i] = "dmg_immune"};
+				if(result[i] > 1){color[i] = "dmg_weak"};
+				if(result[i] > 2){color[i] = "dmg_weak2"};
+			}
+	
+			output = '<table class="output" cellspacing="1" cellpadding="3"><tr>';
+			for (i=0; i<=17; i++)
+			{
+				output += '<td class="tbl_heading">' + type_name[i] + '</td>';
+			}
+			output += '</tr><tr>';
+			for (i=0; i<=17; i++)
+			{
+				output += '<td class="'+ color[i] +'">x' + result[i] + '</td>';
+			}
+			output += '</tr></table>';
+			
+			$("div#content").empty().append(output).show("slow");
+		}
+		else
+		{
+			$("div#content").empty().append("Type 1 and Type 2 must be different").show("slow");
+		}
+	});
+});
+</script>
+<div style="position: absolute; left: 0px; top: 0px; overflow: hidden; margin-top: 0px; margin-left: 0px;">
+<img src="img/logo.png" scrolling="no" style="height: 70px; border: 0px none; width: 1680px; margin-top: 0px; margin-left: 0px; ">
+</div>
+<table border="0" align="left" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+<tr>
+<td>
+<div class="float1" style="overflow: hidden; margin-top: 0px; margin-left: 0px; ">
+<iframe src="img/typevs.png" scrolling="yes" style="height: 805px; border: 0px none; width: 465px; margin-top: 0px; margin-left: 0px;">[Your user agent does not support frames or is currently configured not to display frames.]</iframe>
+</div>
+</td>
+<td>
+<div class="crop2" style="overflow: hidden; margin-top: 0px; margin-left: 0px;">
+<iframe src="http://pokemon.pikasaur.com/" scrolling="yes" style="height: 940px; border: 0px none; width: 1265px; margin-top: -80px; margin-left: 0px; ">[Your user agent does not support frames or is currently configured not to display frames.]</iframe>
+</div>
+</tr>
+</table>
+<div class="column" style="position: absolute; left: 5px; top: 885px;">
+	Type 1: <select id="def_type1">
+	<option value="0">Normal</option>
+	<option value="1">Fire</option>
+	<option value="2">Water</option>
+	<option value="3">Electric</option>
+	<option value="4">Grass</option>
+	<option value="5">Ice</option>
+	<option value="6">Fighting</option>
+	<option value="7">Poison</option>
+	<option value="8">Ground</option>
+	<option value="9">Flying</option>
+	<option value="10">Psychic</option>
+	<option value="11">Bug</option>
+	<option value="12">Rock</option>
+	<option value="13">Ghost</option>
+	<option value="14">Dragon</option>
+	<option value="15">Dark</option>
+	<option value="16">Steel</option>
+	<option value="17">Fairy</option>
+	</select><br>
+</div>
+<div class="column" style="position: absolute; left: 155px; top: 885px;">
+	Type 2: <select id="def_type2">
+	<option value="18">None</option>
+	<option value="0">Normal</option>
+	<option value="1">Fire</option>
+	<option value="2">Water</option>
+	<option value="3">Electric</option>
+	<option value="4">Grass</option>
+	<option value="5">Ice</option>
+	<option value="6">Fighting</option>
+	<option value="7">Poison</option>
+	<option value="8">Ground</option>
+	<option value="9">Flying</option>
+	<option value="10">Psychic</option>
+	<option value="11">Bug</option>
+	<option value="12">Rock</option>
+	<option value="13">Ghost</option>
+	<option value="14">Dragon</option>
+	<option value="15">Dark</option>
+	<option value="16">Steel</option>
+	<option value="17">Fairy</option>
+	</select><br><br>
+</div>
+<div class="column" 
+<div class="column" style="position: absolute; left: 305px; top: 885px;">
+	Ability: <select id="def_ability">
+	<option value="0">None</option>
+	<option value="1">Thick Fat</option>
+	<option value="2">Heatproof</option>
+	<option value="3">Levitate</option>
+	<option value="4">Volt Absorb</option>
+	<option value="5">Water Absorb</option>
+	<option value="6">Dry Skin</option>
+	<option value="7">Flash Fire</option>
+	<option value="8">Sap Sipper</option>
+	<option value="9">Filter</option>
+	<option value="10">Wonder Guard</option>
+	</select>
+</div>
+<div class="column" style="position: absolute; left: 460px; top: 885px;">
+	Weather: <select id="def_weather">
+	<option value="0">None</option>
+	<option value="1">Drought</option>
+	<option value="2">Drizzle</option>
+	</select>
+</div>
+
+<input type="submit" id="submit" value="Submit" style="position: absolute; left: 620px; top: 884px;"><br><br>
+
+<div id="content" style="position: absolute; left: 5px; top: 907px;"></div><br><br>
+
+</body>
+</html>
